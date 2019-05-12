@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <title>Wesoła Gromada</title>
-<link href="bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
+<body>
 <div class="col-lg-4" style="margin:20px">
   <p class="lead" id="loading">Wczytuję listę graczy...</p>
   <Form id="employeeList" style="display:none">
@@ -11,5 +12,38 @@
     <input type="submit" class="btn btn-info" value="Pokaż zarobek" style="margin-top:10px"/>
     </Form>
   <p class="lead" id="employeeDetails" style="display:none"></p>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+ <script> var employeeData;
+$(document).ready(function(){
+  $.get( "https://sheets.googleapis.com/v4/spreadsheets/1USKAWKa_RH2mdWV70MqsLlDmcaQ2Hj5WEUnXfld5nEw/values/Arkusz!A7:E100?key=AIzaSyDqyfoPmWBKRvJn7GID-f8BPEAh42-UdWE", function( data ) {
+    employeeData = data;
+    console.log(data);
+  for(i=0;i<data.values.length;i++){
+    var employeeName = data.values[i][0];
+      $('#employeeSelect').append($('<option>', {
+    value: employeeName,
+    text: employeeName
+}));
+    
+  }
+    $('#employeeList').show();
+    $('#loading').hide();
+});
+});
+
+$('#employeeList').submit(function(e){
+  e.preventDefault();
+  displayEmployee($('#employeeSelect').val())
+});
+
+function displayEmployee(name){
+  for(i=0;i<employeeData.values.length;i++){
+    var employee = employeeData.values[i];
+    if(employee[0] == name){
+      $('#employeeDetails').html("Nazwa gracza : " +  employee[0] + "<br>" + " Srebro do odebrania : " + employee[1]);
+      $('#employeeDetails').show();
+    }
+  }
+} </script>
 </div>
 </html>
